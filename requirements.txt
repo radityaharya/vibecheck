@@ -1,0 +1,5 @@
+python-dotenv
+flask-socketio
+flask
+spotipy
+pymongo[srv]
