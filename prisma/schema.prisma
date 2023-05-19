@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// enum AccountType{
+//   SPOTIFY
+//   YOUTUBE
+// }
+
+model User {
+  id                Int         @id
+  createdAt         DateTime    @default(now())
+  isPremium         Boolean     @default(false)
+  roomParticipating Room[]      @relation("RoomParticipants") 
+  roomMaster        Room[]      @relation("RoomMaster")
+  roomId            Int?
+  queueItem         QueueItem[]
+  Upvote            Upvote[]
+  Downvote          Downvote[]
+}
+
+model Track {
+  id        Int         @id @unique
+  trackId   String
+  artistId  String
+  queueItem QueueItem[]
+}
+
+model Room {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  roomMaster   User     @relation("RoomMaster", fields: [roomMasterId], references: [id])
+  roomMasterId Int
+  name         String
+  slug         String   @unique
+  participants User[]   @relation("RoomParticipants")
+  queue        Queue[]
+}
+
+model Queue {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  room      Room        @relation(fields: [roomId], references: [id])
+  roomId    Int
+  queueItem QueueItem[]
+}
+
+model Upvote {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  createdBy   User       @relation(fields: [createdById], references: [id])
+  createdById Int
+  queueItem   QueueItem? @relation(fields: [queueItemId], references: [id])
+  queueItemId Int?
+}
+
+model Downvote {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  createdBy   User       @relation(fields: [createdById], references: [id])
+  createdById Int
+  queueItem   QueueItem? @relation(fields: [queueItemId], references: [id])
+  queueItemId Int?
+}
+
+model QueueItem {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  queue     Queue      @relation(fields: [queueId], references: [id])
+  queueId   Int
+  track     Track      @relation(fields: [trackId], references: [id])
+  trackId   Int
+  addedBy   User       @relation(fields: [addedById], references: [id])
+  addedById Int
+  played    Boolean    @default(false)
+  upvotes   Upvote[]
+  downvotes Downvote[]
+}
