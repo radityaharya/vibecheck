@@ -1,14 +1,28 @@
-import { type AppType } from "next/dist/shared/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
+
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import type { Session } from "@supabase/auth-helpers-react";
+import type { AppProps } from "next/app";
+import { useState } from "react";
 
 import "~/styles/globals.css";
 
-const Vibecheck: AppType = ({ Component, pageProps }) => {
+function Vibecheck({
+  Component,
+  pageProps,
+}: AppProps<{
+  initialSession: Session;
+}>) {
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+
   return (
-    <ClerkProvider {...pageProps}>
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
       <Component {...pageProps} />
-    </ClerkProvider>
+    </SessionContextProvider>
   );
-};
+}
 
 export default Vibecheck;

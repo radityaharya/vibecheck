@@ -8,9 +8,13 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-    CLERK_SECRET_KEY: z.string().min(1),
     SERVERVAR: z.string().min(1),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    SPOTIFY_CLIENT_ID: z.string().min(1),
+    SPOTIFY_CLIENT_SECRET: z.string().min(1),
+    SPOTIFY_REDIRECT_URI: z.string().min(1),
+    AXIOM_TOKEN: z.string().min(1),
+    AXIOM_DATASET: z.string().min(1),
   },
 
   /**
@@ -20,12 +24,9 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-    NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1),
-    NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1),
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().min(1),
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().min(1),
     NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   },
 
   /**
@@ -36,13 +37,13 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     SERVERVAR: process.env.SERVERVAR,
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.CLERK_SECRET_KEY,
-    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-    NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
-    NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
-      process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
-    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL:
-      process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+    SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+    AXIOM_TOKEN: process.env.AXIOM_TOKEN,
+    AXIOM_DATASET: process.env.AXIOM_DATASET,
   },
 });

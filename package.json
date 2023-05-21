@@ -9,19 +9,24 @@
     "start": "next start"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.17.3",
     "@prisma/client": "^4.14.1",
+    "@supabase/auth-helpers-nextjs": "^0.6.1",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.4.2",
+    "@supabase/supabase-js": "^2.22.0",
     "@t3-oss/env-nextjs": "^0.2.1",
     "@types/spotify-api": "^0.0.21",
     "@types/spotify-web-api-node": "^5.0.7",
+    "lucide-react": "^0.220.0",
     "next": "^13.4.1",
+    "next-axiom": "^0.17.0",
+    "next-swagger-doc": "^0.3.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "spotify-web-api-node": "^5.0.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@clerk/types": "^3.38.0",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",
     "@types/prettier": "^2.7.2",
