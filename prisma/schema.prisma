@@ -42,29 +42,23 @@ model SpotifyAccount {
   picture      String
 }
 
-model Track {
-  id        String      @id @unique
-  trackId   String
-  artistId  String
-  queueItem QueueItem[]
-}
-
 model Room {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  roomMaster   User     @relation("RoomMaster", fields: [roomMasterId], references: [id])
-  roomMasterId String
-  name         String
-  slug         String   @unique
-  participants User[]   @relation("RoomParticipants")
-  queue        Queue[]
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  roomMaster     User     @relation("RoomMaster", fields: [roomMasterId], references: [id])
+  tempPlaylistId String?
+  roomMasterId   String
+  name           String
+  slug           String   @unique
+  participants   User[]   @relation("RoomParticipants")
+  queue          Queue?
 }
 
 model Queue {
-  id        Int         @id @default(autoincrement())
+  id        String         @id @default(uuid())
   createdAt DateTime    @default(now())
   room      Room        @relation(fields: [roomId], references: [id])
-  roomId    String
+  roomId    String      @unique
   queueItem QueueItem[]
 }
 
@@ -88,14 +82,16 @@ model Downvote {
 
 model QueueItem {
   id        String     @id @default(uuid())
+  index     Int        
   createdAt DateTime   @default(now())
   queue     Queue      @relation(fields: [queueId], references: [id])
-  queueId   Int
-  track     Track      @relation(fields: [trackId], references: [id])
+  queueId   String
   trackId   String
+  trackName String
   addedBy   User       @relation(fields: [addedById], references: [id])
-  addedById String
+  addedById String 
   played    Boolean    @default(false)
   upvotes   Upvote[]
   downvotes Downvote[]
+  @@unique([queueId, index])
 }

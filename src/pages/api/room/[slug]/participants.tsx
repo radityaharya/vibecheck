@@ -36,8 +36,6 @@ export default async function handler(
     return res.status(404).json({ error: "Room not found" });
   }
 
-  // return all participants in the room
-
   const participants = await prisma.user.findMany({
     where: {
       roomId: room.id,

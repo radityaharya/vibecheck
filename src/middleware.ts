@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { log } from "next-axiom";
 
-// api logging middleware
 export default function middleware(request: NextRequest) {
   log.info(
     JSON.stringify(

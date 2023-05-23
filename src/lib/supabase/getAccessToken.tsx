@@ -52,11 +52,11 @@ const getAccessToken = async (uuid: string) => {
       return null;
     }
 
-    const now = new Date().getTime() as unknown as bigint;
+    const now = BigInt(Date.now());
     accessToken = data.body.access_token;
     refreshToken = data.body.refresh_token;
     expiresIn = data.body.expires_in as unknown as bigint;
-    expiresAt = now + expiresIn * 1000n;
+    expiresAt = now + BigInt(expiresIn) * 1000n;
 
     await prisma.spotifyAccount.update({
       where: {

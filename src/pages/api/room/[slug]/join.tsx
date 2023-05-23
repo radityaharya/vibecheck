@@ -10,7 +10,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
   const supabase = createServerSupabaseClient({ req, res });
   const {
     data: { session },

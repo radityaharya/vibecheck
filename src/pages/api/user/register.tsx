@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { NextApiRequest, NextApiResponse } from "next";
 import SpotifyWebApi from "spotify-web-api-node";
-
 import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/dist/server/api-utils";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -16,7 +15,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const supabase = createServerSupabaseClient({ req, res });
-  // Check if we have a session
   const {
     data: { session },
   } = await supabase.auth.getSession();

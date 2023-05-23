@@ -1,4 +1,3 @@
-
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import type { Session } from "@supabase/auth-helpers-react";

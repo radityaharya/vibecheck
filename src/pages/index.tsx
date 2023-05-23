@@ -46,13 +46,12 @@ const Home: NextPage = () => {
   }, [ref]);
 
   return (
-    <>
+    <div>
       <Head>
         <title>Vibecheck</title>
         <meta name="description" content="Vibecheck" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div
         className="items-left flex max-h-screen min-h-screen w-full flex-col overflow-auto"
         ref={ref}
@@ -110,7 +109,7 @@ const Home: NextPage = () => {
         data-transition-in
         className="absolute left-0 top-0 z-[-1] md:absolute"
       ></canvas>
-    </>
+    </div>
   );
 };
 

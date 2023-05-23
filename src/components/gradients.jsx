@@ -14,13 +14,13 @@ function normalizeColor(hexCode) {
   return [
     ((hexCode >> 16) & 255) / 255,
     ((hexCode >> 8) & 255) / 255,
-    (255 & hexCode) / 255
+    (255 & hexCode) / 255,
   ];
 }
 ["SCREEN", "LINEAR_LIGHT"].reduce(
   (hexCode, t, n) =>
     Object.assign(hexCode, {
-      [t]: n
+      [t]: n,
     }),
   {}
 );
@@ -35,7 +35,7 @@ class MiniGl {
         -1 !== document.location.search.toLowerCase().indexOf("debug=webgl");
     (_miniGl.canvas = canvas),
       (_miniGl.gl = _miniGl.canvas.getContext("webgl", {
-        antialias: true
+        antialias: true,
       })),
       (_miniGl.meshes = []);
     const context = _miniGl.gl;
@@ -70,7 +70,7 @@ class MiniGl {
                   context.getShaderParameter(shader, context.COMPILE_STATUS) ||
                     console.error(context.getShaderInfoLog(shader)),
                   _miniGl.debug("Material.compileShaderSource", {
-                    source: source
+                    source: source,
                   }),
                   shader
                 );
@@ -138,14 +138,17 @@ class MiniGl {
                   )
                 : (_miniGl.debug("Material.attachUniforms", {
                     name: name,
-                    uniform: uniforms
+                    uniform: uniforms,
                   }),
                   material.uniformInstances.push({
                     uniform: uniforms,
-                    location: context.getUniformLocation(material.program, name)
+                    location: context.getUniformLocation(
+                      material.program,
+                      name
+                    ),
                   }));
             }
-          }
+          },
         },
         Uniform: {
           enumerable: !1,
@@ -159,7 +162,7 @@ class MiniGl {
                   vec2: "2fv",
                   vec3: "3fv",
                   vec4: "4fv",
-                  mat4: "Matrix4fv"
+                  mat4: "Matrix4fv",
                 }[this.type] || "1f"),
                 this.update();
             }
@@ -210,7 +213,7 @@ class MiniGl {
                 };`;
               }
             }
-          }
+          },
         },
         PlaneGeometry: {
           enumerable: !1,
@@ -220,21 +223,21 @@ class MiniGl {
                 (this.attributes = {
                   position: new _miniGl.Attribute({
                     target: context.ARRAY_BUFFER,
-                    size: 3
+                    size: 3,
                   }),
                   uv: new _miniGl.Attribute({
                     target: context.ARRAY_BUFFER,
-                    size: 2
+                    size: 2,
                   }),
                   uvNorm: new _miniGl.Attribute({
                     target: context.ARRAY_BUFFER,
-                    size: 2
+                    size: 2,
                   }),
                   index: new _miniGl.Attribute({
                     target: context.ELEMENT_ARRAY_BUFFER,
                     size: 3,
-                    type: context.UNSIGNED_SHORT
-                  })
+                    type: context.UNSIGNED_SHORT,
+                  }),
                 }),
                 this.setTopology(n, i),
                 this.setSize(width, height, orientation);
@@ -280,7 +283,7 @@ class MiniGl {
                 _miniGl.debug("Geometry.setTopology", {
                   uv: n.attributes.uv,
                   uvNorm: n.attributes.uvNorm,
-                  index: n.attributes.index
+                  index: n.attributes.index,
                 });
             }
             setSize(width = 1, height = 1, orientation = "xz") {
@@ -313,10 +316,10 @@ class MiniGl {
               }
               geometry.attributes.position.update(),
                 _miniGl.debug("Geometry.setSize", {
-                  position: geometry.attributes.position
+                  position: geometry.attributes.position,
                 });
             }
-          }
+          },
         },
         Mesh: {
           enumerable: !1,
@@ -331,13 +334,13 @@ class MiniGl {
                   ([e, attribute]) => {
                     mesh.attributeInstances.push({
                       attribute: attribute,
-                      location: attribute.attach(e, mesh.material.program)
+                      location: attribute.attach(e, mesh.material.program),
                     });
                   }
                 ),
                 _miniGl.meshes.push(mesh),
                 _miniGl.debug("Mesh.constructor", {
-                  mesh: mesh
+                  mesh: mesh,
                 });
             }
             draw() {
@@ -358,7 +361,7 @@ class MiniGl {
             remove() {
               _miniGl.meshes = _miniGl.meshes.filter((e) => e != this);
             }
-          }
+          },
         },
         Attribute: {
           enumerable: !1,
@@ -408,27 +411,27 @@ class MiniGl {
                     0
                   ));
             }
-          }
-        }
+          },
+        },
       });
     const a = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
     _miniGl.commonUniforms = {
       projectionMatrix: new _miniGl.Uniform({
         type: "mat4",
-        value: a
+        value: a,
       }),
       modelViewMatrix: new _miniGl.Uniform({
         type: "mat4",
-        value: a
+        value: a,
       }),
       resolution: new _miniGl.Uniform({
         type: "vec2",
-        value: [1, 1]
+        value: [1, 1],
       }),
       aspectRatio: new _miniGl.Uniform({
         type: "float",
-        value: 1
-      })
+        value: 1,
+      }),
     };
   }
   setSize(e = 640, t = 480) {
@@ -441,7 +444,7 @@ class MiniGl {
       (this.commonUniforms.aspectRatio.value = e / t),
       this.debug("MiniGL.setSize", {
         width: e,
-        height: t
+        height: t,
       });
   }
   //left, right, top, bottom, near, far
@@ -462,7 +465,7 @@ class MiniGl {
       e,
       t,
       n,
-      1
+      1,
     ]),
       this.debug(
         "setOrthographicCamera",
@@ -484,7 +487,7 @@ function e(object, propertyName, val) {
           value: val,
           enumerable: !0,
           configurable: !0,
-          writable: !0
+          writable: !0,
         })
       : (object[propertyName] = val),
     object
@@ -614,7 +617,7 @@ export class Gradient {
       blend:
         "//\n// https://github.com/jamieowen/glsl-blend\n//\n\n// Normal\n\nvec3 blendNormal(vec3 base, vec3 blend) {\n\treturn blend;\n}\n\nvec3 blendNormal(vec3 base, vec3 blend, float opacity) {\n\treturn (blendNormal(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Screen\n\nfloat blendScreen(float base, float blend) {\n\treturn 1.0-((1.0-base)*(1.0-blend));\n}\n\nvec3 blendScreen(vec3 base, vec3 blend) {\n\treturn vec3(blendScreen(base.r,blend.r),blendScreen(base.g,blend.g),blendScreen(base.b,blend.b));\n}\n\nvec3 blendScreen(vec3 base, vec3 blend, float opacity) {\n\treturn (blendScreen(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Multiply\n\nvec3 blendMultiply(vec3 base, vec3 blend) {\n\treturn base*blend;\n}\n\nvec3 blendMultiply(vec3 base, vec3 blend, float opacity) {\n\treturn (blendMultiply(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Overlay\n\nfloat blendOverlay(float base, float blend) {\n\treturn base<0.5?(2.0*base*blend):(1.0-2.0*(1.0-base)*(1.0-blend));\n}\n\nvec3 blendOverlay(vec3 base, vec3 blend) {\n\treturn vec3(blendOverlay(base.r,blend.r),blendOverlay(base.g,blend.g),blendOverlay(base.b,blend.b));\n}\n\nvec3 blendOverlay(vec3 base, vec3 blend, float opacity) {\n\treturn (blendOverlay(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Hard light\n\nvec3 blendHardLight(vec3 base, vec3 blend) {\n\treturn blendOverlay(blend,base);\n}\n\nvec3 blendHardLight(vec3 base, vec3 blend, float opacity) {\n\treturn (blendHardLight(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Soft light\n\nfloat blendSoftLight(float base, float blend) {\n\treturn (blend<0.5)?(2.0*base*blend+base*base*(1.0-2.0*blend)):(sqrt(base)*(2.0*blend-1.0)+2.0*base*(1.0-blend));\n}\n\nvec3 blendSoftLight(vec3 base, vec3 blend) {\n\treturn vec3(blendSoftLight(base.r,blend.r),blendSoftLight(base.g,blend.g),blendSoftLight(base.b,blend.b));\n}\n\nvec3 blendSoftLight(vec3 base, vec3 blend, float opacity) {\n\treturn (blendSoftLight(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Color dodge\n\nfloat blendColorDodge(float base, float blend) {\n\treturn (blend==1.0)?blend:min(base/(1.0-blend),1.0);\n}\n\nvec3 blendColorDodge(vec3 base, vec3 blend) {\n\treturn vec3(blendColorDodge(base.r,blend.r),blendColorDodge(base.g,blend.g),blendColorDodge(base.b,blend.b));\n}\n\nvec3 blendColorDodge(vec3 base, vec3 blend, float opacity) {\n\treturn (blendColorDodge(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Color burn\n\nfloat blendColorBurn(float base, float blend) {\n\treturn (blend==0.0)?blend:max((1.0-((1.0-base)/blend)),0.0);\n}\n\nvec3 blendColorBurn(vec3 base, vec3 blend) {\n\treturn vec3(blendColorBurn(base.r,blend.r),blendColorBurn(base.g,blend.g),blendColorBurn(base.b,blend.b));\n}\n\nvec3 blendColorBurn(vec3 base, vec3 blend, float opacity) {\n\treturn (blendColorBurn(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Vivid Light\n\nfloat blendVividLight(float base, float blend) {\n\treturn (blend<0.5)?blendColorBurn(base,(2.0*blend)):blendColorDodge(base,(2.0*(blend-0.5)));\n}\n\nvec3 blendVividLight(vec3 base, vec3 blend) {\n\treturn vec3(blendVividLight(base.r,blend.r),blendVividLight(base.g,blend.g),blendVividLight(base.b,blend.b));\n}\n\nvec3 blendVividLight(vec3 base, vec3 blend, float opacity) {\n\treturn (blendVividLight(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Lighten\n\nfloat blendLighten(float base, float blend) {\n\treturn max(blend,base);\n}\n\nvec3 blendLighten(vec3 base, vec3 blend) {\n\treturn vec3(blendLighten(base.r,blend.r),blendLighten(base.g,blend.g),blendLighten(base.b,blend.b));\n}\n\nvec3 blendLighten(vec3 base, vec3 blend, float opacity) {\n\treturn (blendLighten(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Linear burn\n\nfloat blendLinearBurn(float base, float blend) {\n\t// Note : Same implementation as BlendSubtractf\n\treturn max(base+blend-1.0,0.0);\n}\n\nvec3 blendLinearBurn(vec3 base, vec3 blend) {\n\t// Note : Same implementation as BlendSubtract\n\treturn max(base+blend-vec3(1.0),vec3(0.0));\n}\n\nvec3 blendLinearBurn(vec3 base, vec3 blend, float opacity) {\n\treturn (blendLinearBurn(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Linear dodge\n\nfloat blendLinearDodge(float base, float blend) {\n\t// Note : Same implementation as BlendAddf\n\treturn min(base+blend,1.0);\n}\n\nvec3 blendLinearDodge(vec3 base, vec3 blend) {\n\t// Note : Same implementation as BlendAdd\n\treturn min(base+blend,vec3(1.0));\n}\n\nvec3 blendLinearDodge(vec3 base, vec3 blend, float opacity) {\n\treturn (blendLinearDodge(base, blend) * opacity + base * (1.0 - opacity));\n}\n\n// Linear light\n\nfloat blendLinearLight(float base, float blend) {\n\treturn blend<0.5?blendLinearBurn(base,(2.0*blend)):blendLinearDodge(base,(2.0*(blend-0.5)));\n}\n\nvec3 blendLinearLight(vec3 base, vec3 blend) {\n\treturn vec3(blendLinearLight(base.r,blend.r),blendLinearLight(base.g,blend.g),blendLinearLight(base.b,blend.b));\n}\n\nvec3 blendLinearLight(vec3 base, vec3 blend, float opacity) {\n\treturn (blendLinearLight(base, blend) * opacity + base * (1.0 - opacity));\n}",
       fragment:
-        "varying vec3 v_color;\n\nvoid main() {\n  vec3 color = v_color;\n  if (u_darken_top == 1.0) {\n    vec2 st = gl_FragCoord.xy/resolution.xy;\n    color.g -= pow(st.y + sin(-12.0) * st.x, u_shadow_power) * 0.4;\n  }\n  gl_FragColor = vec4(color, 1.0);\n}"
+        "varying vec3 v_color;\n\nvoid main() {\n  vec3 color = v_color;\n  if (u_darken_top == 1.0) {\n    vec2 st = gl_FragCoord.xy/resolution.xy;\n    color.g -= pow(st.y + sin(-12.0) * st.x, u_shadow_power) * 0.4;\n  }\n  gl_FragColor = vec4(color, 1.0);\n}",
     }),
       (this.conf = {
         presetName: "",
@@ -622,7 +625,7 @@ export class Gradient {
         density: [0.06, 0.16],
         zoom: 1,
         rotation: 0,
-        playing: true
+        playing: true,
       }),
       document.querySelectorAll("canvas").length < 1
         ? console.log("DID NOT LOAD HERO STRIPE CANVAS")
@@ -654,71 +657,71 @@ export class Gradient {
   initMaterial() {
     this.uniforms = {
       u_time: new this.minigl.Uniform({
-        value: 0
+        value: 0,
       }),
       u_shadow_power: new this.minigl.Uniform({
-        value: 10
+        value: 10,
       }),
       u_darken_top: new this.minigl.Uniform({
-        value: "" === this.el.dataset.jsDarkenTop ? 1 : 0
+        value: "" === this.el.dataset.jsDarkenTop ? 1 : 0,
       }),
       u_active_colors: new this.minigl.Uniform({
         value: this.activeColors,
-        type: "vec4"
+        type: "vec4",
       }),
       u_global: new this.minigl.Uniform({
         value: {
           noiseFreq: new this.minigl.Uniform({
             value: [this.freqX, this.freqY],
-            type: "vec2"
+            type: "vec2",
           }),
           noiseSpeed: new this.minigl.Uniform({
-            value: 5e-6
-          })
+            value: 5e-6,
+          }),
         },
-        type: "struct"
+        type: "struct",
       }),
       u_vertDeform: new this.minigl.Uniform({
         value: {
           incline: new this.minigl.Uniform({
-            value: Math.sin(this.angle) / Math.cos(this.angle)
+            value: Math.sin(this.angle) / Math.cos(this.angle),
           }),
           offsetTop: new this.minigl.Uniform({
-            value: -0.5
+            value: -0.5,
           }),
           offsetBottom: new this.minigl.Uniform({
-            value: -0.5
+            value: -0.5,
           }),
           noiseFreq: new this.minigl.Uniform({
             value: [3, 4],
-            type: "vec2"
+            type: "vec2",
           }),
           noiseAmp: new this.minigl.Uniform({
-            value: this.amp
+            value: this.amp,
           }),
           noiseSpeed: new this.minigl.Uniform({
-            value: 10
+            value: 10,
           }),
           noiseFlow: new this.minigl.Uniform({
-            value: 3
+            value: 3,
           }),
           noiseSeed: new this.minigl.Uniform({
-            value: this.seed
-          })
+            value: this.seed,
+          }),
         },
         type: "struct",
-        excludeFrom: "fragment"
+        excludeFrom: "fragment",
       }),
       u_baseColor: new this.minigl.Uniform({
         value: this.sectionColors[0],
         type: "vec3",
-        excludeFrom: "fragment"
+        excludeFrom: "fragment",
       }),
       u_waveLayers: new this.minigl.Uniform({
         value: [],
         excludeFrom: "fragment",
-        type: "array"
-      })
+        type: "array",
+      }),
     };
     for (let e = 1; e < this.sectionColors.length; e += 1)
       this.uniforms.u_waveLayers.value.push(
@@ -726,39 +729,39 @@ export class Gradient {
           value: {
             color: new this.minigl.Uniform({
               value: this.sectionColors[e],
-              type: "vec3"
+              type: "vec3",
             }),
             noiseFreq: new this.minigl.Uniform({
               value: [
                 2 + e / this.sectionColors.length,
-                3 + e / this.sectionColors.length
+                3 + e / this.sectionColors.length,
               ],
-              type: "vec2"
+              type: "vec2",
             }),
             noiseSpeed: new this.minigl.Uniform({
-              value: 11 + 0.3 * e
+              value: 11 + 0.3 * e,
             }),
             noiseFlow: new this.minigl.Uniform({
-              value: 6.5 + 0.3 * e
+              value: 6.5 + 0.3 * e,
             }),
             noiseSeed: new this.minigl.Uniform({
-              value: this.seed + 10 * e
+              value: this.seed + 10 * e,
             }),
             noiseFloor: new this.minigl.Uniform({
-              value: 0.1
+              value: 0.1,
             }),
             noiseCeil: new this.minigl.Uniform({
-              value: 0.63 + 0.07 * e
-            })
+              value: 0.63 + 0.07 * e,
+            }),
           },
-          type: "struct"
+          type: "struct",
         })
       );
     return (
       (this.vertexShader = [
         this.shaderFiles.noise,
         this.shaderFiles.blend,
-        this.shaderFiles.vertex
+        this.shaderFiles.vertex,
       ].join("\n\n")),
       new this.minigl.Material(
         this.vertexShader,
@@ -835,7 +838,7 @@ export class Gradient {
       "--gradient-color-1",
       "--gradient-color-2",
       "--gradient-color-3",
-      "--gradient-color-4"
+      "--gradient-color-4",
     ]
       .map((cssPropertyName) => {
         let hex = this.computedCanvasStyle
