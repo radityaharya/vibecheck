@@ -7,7 +7,6 @@ import syncQueueToPlaylist from "~/lib/spotify/syncQueueToPlaylist";
 import { log } from "next-axiom";
 import getAccessToken from "~/lib/supabase/getAccessToken";
 
-
 const prisma = new PrismaClient();
 
 export default async function handler(

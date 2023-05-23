@@ -2,23 +2,21 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-// import Image from "next/image";
+import Page from "~/layouts/Page";
 import PeopleUsing from "~/components/Home/peopleUsing";
-import TopNav from "~/components/topNav";
-import { useEffect, useRef } from "react";
 import { ChevronRight } from "lucide-react";
-import { Gradient } from "~/components/gradients";
 
 import localFont from "next/font/local";
-// const chillax = localFont({ src: "./Chillax-Variable.woff" });
 const chillax = localFont({
   src: "./Chillax-Variable.woff",
   variable: "--font-chillax",
 });
 
-const gradient = new Gradient();
+type customPageType = NextPage & {
+  showGradient?: boolean;
+};
 
-const Home: NextPage = () => {
+const Home: customPageType = () => {
   const people = [
     {
       image_src:
@@ -37,30 +35,14 @@ const Home: NextPage = () => {
     },
   ];
 
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      gradient.initGradient("#gradient-canvas");
-    }
-  }, [ref]);
-
   return (
-    <div>
+    <Page>
       <Head>
         <title>Vibecheck</title>
         <meta name="description" content="Vibecheck" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div
-        className="items-left flex max-h-screen min-h-screen w-full flex-col overflow-auto"
-        ref={ref}
-        // style={{
-        //   backgroundImage:
-        //     "radial-gradient(95.13% 31.02% at 0% 0.68%, #FF005A 0%, rgba(80, 40, 135, 0.915267) 53.3%, #09080F 100%)",
-        // }}
-      >
-        <TopNav />
+      <div className="items-left flex max-h-screen min-h-screen w-full flex-col overflow-auto">
         <div className="flex min-h-screen flex-col items-start justify-center py-2 pt-10 drop-shadow-md">
           <div className="flex flex-col items-start gap-5 px-5 md:gap-10 md:px-20">
             <div className="flex flex-col items-start gap-4">
@@ -104,13 +86,10 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <canvas
-        id="gradient-canvas"
-        data-transition-in
-        className="absolute left-0 top-0 z-[-1] md:absolute"
-      ></canvas>
-    </div>
+    </Page>
   );
 };
+
+Home.showGradient = true;
 
 export default Home;

@@ -2,6 +2,7 @@ import React from "react";
 import { Search } from "lucide-react";
 import { Music } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const TopNav = () => {
   return (
@@ -11,14 +12,16 @@ const TopNav = () => {
       }
     >
       <div className="flex w-full flex-row items-center justify-between gap-10 md:max-w-[384px]">
-        <Image
-          className="drop-shadow-xl"
-          src="https://iwhksjsfesopygewmtaw.supabase.co/storage/v1/object/public/public/vibecheck.svg"
-          alt="vibecheck logo"
-          width={134}
-          height={20}
-        />
-        <button className="flex hidden items-center justify-center gap-10 rounded-xl bg-white bg-opacity-20 p-2 px-3">
+        <Link href="/">
+          <Image
+            className="drop-shadow-xl"
+            src="https://iwhksjsfesopygewmtaw.supabase.co/storage/v1/object/public/public/vibecheck.svg"
+            alt="vibecheck logo"
+            width={134}
+            height={20}
+          />
+        </Link>
+        <button className="hidden items-center justify-center gap-10 rounded-xl bg-white bg-opacity-20 p-2 px-3">
           <span className="text-xs font-medium leading-4 text-white">
             <span>@titik.temu</span>
           </span>
