@@ -29,6 +29,16 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  const userExists = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    }
+  });
+
+  if (userExists) {
+    return redirect(res, "/");
+  }
+
   if (!provider_token) {
     provider_token = (await getAccessToken(userId)) as string;
 
