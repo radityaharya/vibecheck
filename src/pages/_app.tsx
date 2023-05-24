@@ -6,8 +6,6 @@ import type { Session } from "@supabase/auth-helpers-react";
 import type { AppProps } from "next/app";
 import { useEffect, useRef, useState } from "react";
 import { Gradient } from "~/components/gradients";
-import { useContext } from "react";
-import { SessionContext } from "@supabase/auth-helpers-react";
 
 import "~/styles/globals.css";
 
@@ -28,7 +26,7 @@ interface CustomPageType extends React.FC<CustomPageProps> {
 function Vibecheck({ Component, pageProps }: CustomAppProps) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
 
-  const showGradient = Component.showGradient ?? false;
+  const showGradient = Component.showGradient ?? true;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

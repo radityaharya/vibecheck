@@ -34,9 +34,17 @@ export default async function handler(
 
     if (!provider_token) {
       log.error("user/register | No Spotify token found");
-      return res.status(500).json({
-        error: "No Spotify token found",
-      });
+
+      await prisma.user
+        .create({
+          data: {
+            id: userId,
+          },
+        })
+        .catch((err) => {
+          log.error(err as string);
+          return res.status(500).json({ error: "Internal server error", message: err });
+        });
     }
   }
 
