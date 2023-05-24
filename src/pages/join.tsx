@@ -16,8 +16,10 @@ const Join: customPageType = () => {
         <meta name="description" content="Vibecheck" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="items-left flex max-h-screen min-h-screen w-full flex-col overflow-auto">
-        <JoinForm />
+      <div className="flex h-full flex-col items-start gap-5 px-5 md:gap-10 md:px-20">
+        <div className="flex h-full w-full flex-col items-center justify-center overflow-auto">
+          <JoinForm />
+        </div>
       </div>
     </Page>
   );

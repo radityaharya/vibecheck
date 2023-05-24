@@ -6,6 +6,8 @@ import type { Session } from "@supabase/auth-helpers-react";
 import type { AppProps } from "next/app";
 import { useEffect, useRef, useState } from "react";
 import { Gradient } from "~/components/gradients";
+import { useContext } from "react";
+import { SessionContext } from "@supabase/auth-helpers-react";
 
 import "~/styles/globals.css";
 
@@ -36,8 +38,12 @@ function Vibecheck({ Component, pageProps }: CustomAppProps) {
     }
 
     return () => {
-      if (canvasRef.current && canvasRef.current.parentNode) {
-        canvasRef.current.parentNode.removeChild(canvasRef.current);
+      if (canvasRef.current) {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+        if (context) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        }
       }
     };
   }, [showGradient]);

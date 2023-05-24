@@ -1,10 +1,11 @@
-import React from "react";
-import { Search } from "lucide-react";
-import { Music } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useUser } from "@supabase/auth-helpers-react";
 
 const TopNav = () => {
+  const user = useUser();
+  const userName = user?.email?.split("@")[0];
+
   return (
     <header
       className={
@@ -28,17 +29,23 @@ const TopNav = () => {
         </button>
       </div>
       <nav className="hidden items-center justify-end md:flex">
-        <div className="rounded-10 flex w-28 items-center justify-center p-2">
-          <Search width={24} height={24} color="white" />
-        </div>
-        <div className="flex w-28 flex-shrink-0 items-center justify-center gap-14 p-2">
-          <Music width={24} height={24} color="white" />
-        </div>
-        <div className="rounded-20 flex w-36 flex-shrink-0 items-center justify-center gap-10 overflow-hidden rounded-xl bg-white p-3">
-          <span className="text-sm font-medium leading-5 text-black">
-            <span>radityaharya</span>
-          </span>
-        </div>
+        {user ? (
+          <Link href="/profile">
+            <div className="rounded-20 flex w-36 flex-shrink-0 items-center justify-center gap-10 overflow-hidden rounded-xl bg-white p-3">
+              <span className="text-sm font-medium leading-5 text-black">
+                {userName}
+              </span>
+            </div>
+          </Link>
+        ) : (
+          <Link href="/auth">
+            <div className="rounded-20 flex w-36 flex-shrink-0 items-center justify-center gap-10 overflow-hidden rounded-xl bg-white p-3">
+              <span className="text-sm font-medium leading-5 text-black">
+                Login
+              </span>
+            </div>
+          </Link>
+        )}
       </nav>
     </header>
   );
