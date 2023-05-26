@@ -1,32 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { NextApiRequest, NextApiResponse } from "next";
 import SpotifyWebApi from "spotify-web-api-node";
 import { PrismaClient } from "@prisma/client";
-import { redirect } from "next/dist/server/api-utils";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { log } from "next-axiom";
 import getAccessToken from "~/lib/supabase/getAccessToken";
-
+import type { Session } from "@supabase/auth-helpers-react";
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const supabase = createServerSupabaseClient({ req, res });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+
+export async function RegisterUser(session: Session) {
+  log.info("user/register", session);
 
   const userId = session?.user?.id as string;
+
   let provider_token = session?.provider_token as string;
   const provider_refresh_token = session?.provider_refresh_token as string;
 
   log.info("user/register | userId: " + userId);
 
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    throw new Error("Unauthorized");
+  }
+
+  const userExists = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (userExists) {
+    log.info("user/register | User already exists");
+    return;
   }
 
   if (!provider_token) {
@@ -43,7 +49,7 @@ export default async function handler(
         })
         .catch((err) => {
           log.error(err as string);
-          return res.status(500).json({ error: "Internal server error", message: err });
+          throw new Error("Internal server error");
         });
     }
   }
@@ -61,10 +67,10 @@ export default async function handler(
   });
 
   if (user) {
-    return redirect(res, "/");
+    return;
   }
 
-  prisma.user
+  await prisma.user
     .create({
       data: {
         id: userId,
@@ -86,10 +92,10 @@ export default async function handler(
     })
     .catch((err) => {
       log.error(err as string);
-      return res.status(500).json({
-        error: err as string,
-      });
+      throw new Error(err as string);
     });
 
-  redirect(res, "/");
+  return;
 }
+
+// export default RegisterUser;

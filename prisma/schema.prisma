@@ -39,7 +39,7 @@ model SpotifyAccount {
   refreshToken String
   expiresIn    BigInt
   expiresAt    BigInt
-  picture      String
+  picture      String?
 }
 
 model Room {

@@ -52,6 +52,14 @@ export default async function handler(
     return res.status(400).json({ error: "slug already exists" });
   }
 
+  const spotifyToken = await getAccessToken(userId);
+
+  if (!spotifyToken) {
+    return res.status(500).json({
+      error: "No Spotify token found",
+    });
+  }
+
   let newRoom = await prisma.room
     .create({
       data: {
@@ -66,14 +74,6 @@ export default async function handler(
         error: err as string,
       });
     });
-
-  const spotifyToken = await getAccessToken(userId);
-
-  if (!spotifyToken) {
-    return res.status(500).json({
-      error: "No Spotify token found",
-    });
-  }
 
   const spt = new SpotifyWebApi({
     accessToken: spotifyToken,

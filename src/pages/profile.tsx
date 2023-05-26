@@ -14,8 +14,8 @@ export default function Profile({ user }: { user: User }) {
         [<Link href="/">Home</Link>] | [
         <Link href="/protected-page">server-side RLS</Link>]
       </p>
-      <div>Hello {user.email}</div>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {/* <div>Hello {user.email}</div> */}
+      {JSON.stringify(user, null, 2)}
     </>
   );
 }
