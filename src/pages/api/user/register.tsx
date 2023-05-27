@@ -43,7 +43,9 @@ export default async function handler(
         })
         .catch((err) => {
           log.error(err as string);
-          return res.status(500).json({ error: "Internal server error", message: err });
+          return res
+            .status(500)
+            .json({ error: "Internal server error", message: err });
         });
     }
   }

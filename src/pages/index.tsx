@@ -73,7 +73,7 @@ const Home: customPageType = () => {
                 href="/join"
               >
                 <span className="font-medium text-black">Join a Session</span>
-                <ChevronRight size={24} />
+                <ChevronRight size={24} color="black" />
               </Link>
               <Link
                 className="flex items-center justify-center gap-5 rounded-2xl border-2 border-white bg-transparent px-4 py-3"

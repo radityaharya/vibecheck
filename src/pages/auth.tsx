@@ -48,7 +48,7 @@ export const getServerSideProps = async (
         },
       };
     }
-    await RegisterUser(session).then((res) => {
+    await RegisterUser(session).then(() => {
       return {
         redirect: {
           destination: "/",
@@ -74,7 +74,7 @@ const AuthPage: customPageType = () => {
 
   return (
     <Page>
-      <div className="flex h-full flex-col items-start gap-5 bg-[#09080f7d] px-5">
+      <div className="flex h-full flex-col items-start gap-5 bg-[#09080f]/80 px-5">
         <div className="flex h-full w-full flex-col items-center justify-center overflow-auto">
           <div className="flex flex-col items-center justify-center rounded-lg p-10">
             {isRegistering ? (

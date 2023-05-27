@@ -67,5 +67,7 @@ module.exports = {
       },
     },
   },
+  // set nocompatible
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
   plugins: [require("tailwindcss-animate")],
 };

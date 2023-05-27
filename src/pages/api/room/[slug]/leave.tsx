@@ -35,7 +35,6 @@ export default async function handler(
     return res.status(404).json({ error: "Room not found" });
   }
 
-  // check if user is in the room
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const user = await prisma.user.findUnique({
     where: {

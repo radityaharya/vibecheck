@@ -31,13 +31,14 @@ function Vibecheck({ Component, pageProps }: CustomAppProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current && showGradient) {
+    let canvas = canvasRef.current;
+    if (canvas && showGradient) {
       gradient.initGradient("#gradient-canvas");
     }
 
     return () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
+      canvas = canvasRef.current;
+      if (canvas) {
         const context = canvas.getContext("2d");
         if (context) {
           context.clearRect(0, 0, canvas.width, canvas.height);

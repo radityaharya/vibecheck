@@ -20,7 +20,12 @@ const config = withAxiom({
     defaultLocale: "en",
   },
   images: {
-    domains: ["i.scdn.co", "iwhksjsfesopygewmtaw.supabase.co"],
+    domains: [
+      "i.scdn.co",
+      "iwhksjsfesopygewmtaw.supabase.co",
+      "loremflickr.com",
+      "loremflickr.com",
+    ],
   },
 });
 

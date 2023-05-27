@@ -88,6 +88,8 @@ model QueueItem {
   queueId   String
   trackId   String
   trackName String
+  // albumId   String
+  // albumName String
   addedBy   User       @relation(fields: [addedById], references: [id])
   addedById String 
   played    Boolean    @default(false)
