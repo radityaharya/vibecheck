@@ -7,6 +7,10 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
 
+  // base site url based on environment variable NEXT_PUBLIC_VERCEL_URL or DEV_URL
+  const baseUrl =
+    process.env.NEXT_PUBLIC_VERCEL_URL || (process.env.DEV_URL as string);
+
   if (code) {
     const supabase = createRouteHandlerClient({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
@@ -19,7 +23,5 @@ export async function GET(request: NextRequest) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(
-    "https://radityaharya-potential-orbit-6pgpw4rpjvj299x-3000.preview.app.github.dev/"
-  );
+  return NextResponse.redirect(`${baseUrl}`);
 }

@@ -8,6 +8,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { NextPage } from "next";
 
 const AuthPage: NextPage = () => {
+
+  const window = globalThis.window;
+
   return (
     <Page>
       <div className="flex h-full flex-col items-start gap-5 bg-[#09080f]/80 px-5">
@@ -53,7 +56,7 @@ const AuthPage: NextPage = () => {
                 },
               }}
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              redirectTo={`/auth/callback`}
+              redirectTo={`${window.location.origin}/auth/callback`}
               providers={["spotify"]}
               providerScopes={{
                 spotify:
