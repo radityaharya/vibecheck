@@ -1,10 +1,18 @@
+"use client";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Image from "next/image";
 import Link from "next/link";
-import { useUser } from "@supabase/auth-helpers-react";
+import useSWR from "swr";
+import { getUser } from "~/components/getUser";
 
-const TopNav = () => {
-  const user = useUser();
-  const userName = user?.email?.split("@")[0];
+function Page() {
+  const { data } = useSWR("user", getUser);
+  const { user } = data || {}; // add type guard to check if data is defined
+
+  let userName = "Guest";
+  if (user) {
+    userName = user?.user_metadata.full_name || user?.email?.split("@")[0];
+  }
 
   return (
     <header
@@ -49,6 +57,6 @@ const TopNav = () => {
       </nav>
     </header>
   );
-};
+}
 
-export default TopNav;
+export default Page;

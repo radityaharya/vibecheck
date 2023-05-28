@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useRef, useMemo } from "react";
 import {

@@ -1,93 +1,20 @@
+"use client";
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "src/lib/supabase/client";
 import Page from "src/layouts/Page";
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-  NextPage,
-} from "next";
 
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { RegisterUser } from "~/lib/supabase/registerUser";
-import { log } from "next-axiom";
-import { PrismaClient } from "@prisma/client";
-import { useState, useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { NextPage } from "next";
 
-const prisma = new PrismaClient();
-
-type customPageType = NextPage & {
-  showGradient?: boolean;
-};
-
-export const getServerSideProps = async (
-  ctx: GetServerSidePropsContext | { req: NextApiRequest; res: NextApiResponse }
-) => {
-  // Create authenticated Supabase Client
-  const supabase = createServerSupabaseClient(ctx);
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  log.info(JSON.stringify(session));
-
-  if (session) {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-    });
-    if (user) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
-    await RegisterUser(session).then(() => {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    });
-  }
-
-  return {
-    props: {},
-  };
-};
-
-const AuthPage: customPageType = () => {
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  useEffect(() => {
-    if (window.location.hash === "#register") {
-      setIsRegistering(true);
-    }
-  }, []);
-
+const AuthPage: NextPage = () => {
   return (
     <Page>
       <div className="flex h-full flex-col items-start gap-5 bg-[#09080f]/80 px-5">
         <div className="flex h-full w-full flex-col items-center justify-center overflow-auto">
           <div className="flex flex-col items-center justify-center rounded-lg p-10">
-            {isRegistering ? (
-              <div className="flex flex-col items-center justify-center rounded-lg">
-                <h1 className="text-3xl font-bold text-white">
-                  Registering...
-                </h1>
-              </div>
-            ) : (
-              <></>
-            )}
             <Auth
-              supabaseClient={supabase}
+              supabaseClient={createClientComponentClient()}
               theme="light"
               appearance={{
                 theme: ThemeSupa,
@@ -125,7 +52,8 @@ const AuthPage: customPageType = () => {
                   },
                 },
               }}
-              redirectTo="/api/user/register"
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              redirectTo={`/auth/callback`}
               providers={["spotify"]}
               providerScopes={{
                 spotify:

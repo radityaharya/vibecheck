@@ -1,3 +1,5 @@
+"use client";
+
 const codeValidation = (e: React.FormEvent<HTMLInputElement>) => {
   e.preventDefault();
   const form = e.currentTarget;
