@@ -17,13 +17,16 @@ export const GradientBackground: React.FC<Props> = (props) => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useLayoutEffect(() => {
+  // useLayoutEffect(() => {
+  //   if (showGradient) {
+  //     gradient.initGradient("#gradient-canvas");
+  //   }
+  // }, [showGradient]);
+
+  useEffect(() => {
     if (showGradient) {
       gradient.initGradient("#gradient-canvas");
     }
-  }, [showGradient]);
-
-  useEffect(() => {
     return () => {
       const canvas = canvasRef.current;
       if (canvas) {
