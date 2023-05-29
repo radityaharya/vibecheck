@@ -5,7 +5,7 @@ import { type NextPage } from "next";
 import dynamic from "next/dynamic";
 import { NowPlaying } from "~/components/Room/NowPlaying";
 import Page from "~/layouts/Page";
-
+import { Search } from "~/components/Room/Search";
 const QueueTable = dynamic(
   () => import("~/components/Room/QueueTable").then((mod) => mod.QueueTable),
   { ssr: false }
@@ -54,7 +54,7 @@ const Room: NextPage = () => {
       randomData()
         .then((newData: DataProps[]) => setData([...oldData, ...newData]))
         .catch((error: Error) => console.error(error));
-    }, 500);
+    }, 5000);
     return () => clearInterval(interval);
   });
 
@@ -63,8 +63,18 @@ const Room: NextPage = () => {
       <div className="flex h-full max-h-screen flex-col items-start gap-5 overflow-hidden bg-[#09080f]/80 pt-[110px] md:gap-10">
         <div className="flex h-full w-full flex-row items-center justify-center">
           <div className="left-col flex h-full w-[40%] max-w-[450px] flex-col items-start gap-5 pl-20">
-            <NowPlaying />
-            <div>TODO:SEARCH</div>
+            <NowPlaying
+              image={
+                "/_next/image?url=https%3A%2F%2Floremflickr.com%2F640%2F480%3Flock%3D3494191449505792&w=64&q=75"
+              }
+              trackTitle={"Unknown Track"}
+              artist={"Unknown Artist"}
+              progress={75}
+              duration={100}
+            />
+            <div className="search flex w-full">
+              <Search />
+            </div>
           </div>
           <div className="right-col flex h-full w-full flex-col items-start rounded-tl-xl border-l-2 border-r  border-t-2 border-[#C9C5CA]/10 bg-[#09080f]/10 p-5 pr-20">
             <QueueTable data={data} />
