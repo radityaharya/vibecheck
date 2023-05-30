@@ -11,6 +11,7 @@ function Page() {
 
   let userName = "Guest";
   if (user) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     userName = user?.user_metadata.full_name || user?.email?.split("@")[0];
   }
 

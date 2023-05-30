@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useRef, useMemo } from "react";
@@ -129,9 +129,12 @@ export const QueueTable = ({ data }: QueueTableProps) => {
 
   return (
     <div className="w-full overflow-hidden">
-      <Table className="w-full ">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow className="text-left " ref={headerRef}>
+          <TableRow
+            className="hidden w-full text-left md:table-cell"
+            ref={headerRef}
+          >
             <TableHead
               className="sticky top-0 z-10 max-w-[50px] pb-5 pt-2 text-left"
               key="index"
@@ -169,12 +172,14 @@ export const QueueTable = ({ data }: QueueTableProps) => {
           </TableRow>
         </TableHeader>
       </Table>
-      <div className="scrollbar max-h-[calc(100vh-12rem)] overflow-y-scroll">
+      <div className="scrollbar max-h-[calc(100vh-20rem)] overflow-y-scroll md:max-h-[calc(100vh-12rem)]">
         <Table className="w-full ">
           <TableBody ref={bodyRef}>
             {dataWithIndex.map((item, index) => (
               <TableRow key={index} data-qid={item.queueId}>
-                <TableCell className="max-w-[50px]">{index + 1}</TableCell>
+                <TableCell className="hidden max-w-[50px] md:table-cell">
+                  {index + 1}
+                </TableCell>
                 <TableCell className="min-w-[50px]">
                   <TrackItemCol
                     image={item.image}
@@ -182,16 +187,18 @@ export const QueueTable = ({ data }: QueueTableProps) => {
                     artist={item.artist}
                   />
                 </TableCell>
-                <TableCell className="min-w-[50px] overflow-hidden overflow-ellipsis whitespace-nowrap text-sm">
+                <TableCell className="hidden min-w-[50px] overflow-hidden overflow-ellipsis whitespace-nowrap text-sm md:table-cell">
                   {item.album}
                 </TableCell>
-                <TableCell className="min-w-[50px]">
+                <TableCell className="hidden min-w-[50px] md:table-cell">
                   <VotedBy users={item.votedBy} />
                 </TableCell>
-                <TableCell className="min-w-[50px]">
+                <TableCell className="min-w-[50px] max-w-[50px]">
                   <VoteActions item={item} />
                 </TableCell>
-                <TableCell className="min-w-[50px]">{item.duration}</TableCell>
+                <TableCell className="hidden min-w-[50px] md:table-cell">
+                  {item.duration}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

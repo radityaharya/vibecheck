@@ -1,88 +1,96 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
-import { faker } from "@faker-js/faker";
-import { type NextPage } from "next";
-import dynamic from "next/dynamic";
 import { NowPlaying } from "~/components/Room/NowPlaying";
 import Page from "~/layouts/Page";
 import { Search } from "~/components/Room/Search";
-const QueueTable = dynamic(
-  () => import("~/components/Room/QueueTable").then((mod) => mod.QueueTable),
-  { ssr: false }
-);
+import { QueueTable } from "~/components/Room/QueueTable";
 
 import React, { useEffect, useState } from "react";
-
+import type { NowPlayingProps } from "~/components/Room/NowPlaying";
+import type { NowPlayingResponse } from "~/types/spotify/now-playing";
 import type { DataProps } from "~/components/Room/QueueTable";
+import Div100vh from "react-div-100vh";
 
-// TODO Remove random data generation
+const getQueue = async (roomId: string): Promise<DataProps[]> => {
+  const response = await fetch(`/api/room/${roomId}/queue/mock`);
+  const data = (await response.json()) as DataProps[];
+  return data;
+};
 
-// eslint-disable-next-line @typescript-eslint/require-await
-async function randomVoters() {
-  const voters = Math.floor(Math.random() * 10) + 1;
-  const votersArray = Array.from({ length: voters }, () => ({
-    id: faker.string.uuid(),
-    username: faker.person.firstName(),
-    image: faker.image.urlLoremFlickr(),
-  }));
-  return votersArray;
-}
+const getNowPlaying = async (roomId: string): Promise<NowPlayingResponse> => {
+  const response = await fetch(`/api/room/${roomId}/currentlyPlaying`);
+  const data = (await response.json()) as NowPlayingResponse;
+  return data;
+};
 
-// eslint-disable-next-line @typescript-eslint/require-await
-async function randomData(): Promise<DataProps[]> {
-  return [
-    {
-      queueId: faker.string.uuid(),
-      image: faker.image.urlLoremFlickr(),
-      trackTitle: faker.lorem.words(),
-      artist: faker.person.firstName(),
-      album: faker.lorem.words(),
-      duration: `${Math.floor(Math.random() * 10)}:${Math.floor(
-        Math.random() * 60
-      )}`,
-      votedBy: await randomVoters(),
-    },
-  ];
-}
-
-const Room: NextPage = () => {
+export default function Room({ params }: { params: { slug: string } }) {
   const [data, setData] = useState<DataProps[]>([]);
+
+  const [nowPlayingData, setNowPlayingData] = useState<NowPlayingProps>({
+    image: "https://loremflickr.com/640/480?lock=3494191449505792",
+    trackTitle: null,
+    artist: null,
+    progress: 0,
+    duration: 0,
+    state: "paused",
+  });
+
+  const roomId = params.slug;
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    const intervall = setInterval(() => {
       const oldData = data;
       console.log("fetching data");
-      randomData()
+      getQueue(roomId)
         .then((newData: DataProps[]) => setData([...oldData, ...newData]))
         .catch((error: Error) => console.error(error));
-    }, 5000);
-    return () => clearInterval(interval);
+    }, 3000);
+    return () => clearInterval(intervall);
   });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("fetching now playing");
+      getNowPlaying(roomId)
+        .then((newData: NowPlayingResponse) => {
+          setNowPlayingData({
+            image: newData?.body?.item?.album?.images[0]?.url as string,
+            trackTitle: newData?.body?.item.name,
+            artist: newData.body.item.artists[0]?.name as string,
+            progress: newData.body.progress_ms,
+            duration: newData.body.item.duration_ms,
+            state: newData.body.is_playing ? "playing" : "paused" ?? "paused",
+          });
+        })
+        .catch((error: Error) => console.error(error));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [roomId]);
 
   return (
     <Page>
-      <div className="flex h-full max-h-screen flex-col items-start gap-5 overflow-hidden bg-[#09080f]/80 pt-[110px] md:gap-10">
-        <div className="flex h-full w-full flex-row items-center justify-center">
-          <div className="left-col flex h-full w-[40%] max-w-[450px] flex-col items-start gap-5 pl-20">
+      <Div100vh className="flex h-full max-h-screen flex-col items-start gap-5 overflow-hidden bg-[#09080f]/80 pt-20 md:gap-10 md:pt-[110px]">
+        <div className="flex h-full w-full flex-col md:flex-row">
+          <div className="left-col flex max-h-[40%] w-full flex-col items-start gap-5 p-5 md:h-full md:max-h-full md:w-[40%] md:max-w-[450px] md:p-0 md:pl-20">
             <NowPlaying
-              image={
-                "/_next/image?url=https%3A%2F%2Floremflickr.com%2F640%2F480%3Flock%3D3494191449505792&w=64&q=75"
-              }
-              trackTitle={"Unknown Track"}
-              artist={"Unknown Artist"}
-              progress={75}
-              duration={100}
+              image={nowPlayingData.image}
+              trackTitle={nowPlayingData.trackTitle}
+              artist={nowPlayingData.artist}
+              progress={nowPlayingData.progress}
+              duration={nowPlayingData.duration}
+              state={nowPlayingData.state}
             />
-            <div className="search flex w-full">
+            <div className="search hidden w-full md:flex">
               <Search />
             </div>
           </div>
-          <div className="right-col flex h-full w-full flex-col items-start rounded-tl-xl border-l-2 border-r  border-t-2 border-[#C9C5CA]/10 bg-[#09080f]/10 p-5 pr-20">
+          <div className="right-col flex h-full w-full flex-col items-start border-r md:rounded-tl-xl md:border-l-2 md:border-t-2 md:border-[#C9C5CA]/10 md:bg-[#09080f]/10 md:p-5 md:pr-20">
             <QueueTable data={data} />
           </div>
         </div>
-      </div>
+      </Div100vh>
     </Page>
   );
-};
-
-export default Room;
+}

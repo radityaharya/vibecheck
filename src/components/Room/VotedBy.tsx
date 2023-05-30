@@ -28,7 +28,9 @@ export const VotedBy = ({ users }: VotedByProps) => {
             <Tooltip>
               <TooltipTrigger>
                 <AvatarImage src={user.image} alt={user.username} />
-                <AvatarFallback>{user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {user.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
               </TooltipTrigger>
               <TooltipContent>{user.username}</TooltipContent>
             </Tooltip>

@@ -8,7 +8,6 @@ import getAccessToken from "~/lib/supabase/getAccessToken";
 import type { Session } from "@supabase/auth-helpers-react";
 const prisma = new PrismaClient();
 
-
 export async function RegisterUser(session: Session) {
   log.info("user/register", session);
 

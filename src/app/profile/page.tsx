@@ -4,7 +4,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 
 export default async function Profile() {
-  
   const supabase = createClientComponentClient();
   const {
     data: { user },

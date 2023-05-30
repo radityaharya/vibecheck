@@ -8,12 +8,11 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { NextPage } from "next";
 
 const AuthPage: NextPage = () => {
-
   const window = globalThis.window;
 
   return (
     <Page>
-      <div className="flex h-full flex-col items-start gap-5 bg-[#09080f]/80 px-5">
+      <div className="flex h-screen flex-col items-start gap-5 bg-[#09080f]/80 px-5">
         <div className="flex h-full w-full flex-col items-center justify-center overflow-auto">
           <div className="flex flex-col items-center justify-center rounded-lg p-10">
             <Auth

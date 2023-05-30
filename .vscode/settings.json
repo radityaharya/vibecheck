@@ -2,5 +2,6 @@
   "prisma.fileWatcher": true,
   "docwriter.style": "JSDoc",
   "editor.tabSize": 2,
-  "todo-tree.tree.showBadges": true
+  "todo-tree.tree.showBadges": true,
+  "workbench.colorCustomizations": {}
 }

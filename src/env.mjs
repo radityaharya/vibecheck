@@ -15,6 +15,7 @@ export const env = createEnv({
     SPOTIFY_REDIRECT_URI: z.string().min(1),
     AXIOM_TOKEN: z.string().min(1),
     AXIOM_DATASET: z.string().min(1),
+    REDIS_URL: z.string().min(1),
   },
 
   /**
@@ -45,5 +46,6 @@ export const env = createEnv({
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
     AXIOM_TOKEN: process.env.AXIOM_TOKEN,
     AXIOM_DATASET: process.env.AXIOM_DATASET,
+    REDIS_URL: process.env.REDIS_URL,
   },
 });
