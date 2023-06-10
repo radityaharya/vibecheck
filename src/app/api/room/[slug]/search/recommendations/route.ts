@@ -5,7 +5,6 @@ import { prisma } from "~/lib/prisma/client";
 import getAccessToken from "~/lib/supabase/getAccessToken";
 import SpotifyWebApi from "spotify-web-api-node";
 import { createClient } from "redis";
-import type { RecomendationResponse } from "~/types/spotify/recommendationsResponse";
 import { log } from "next-axiom";
 
 interface UserRecomendation {
