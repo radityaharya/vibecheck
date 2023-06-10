@@ -27,9 +27,9 @@ const config = withAxiom({
       "loremflickr.com",
     ],
   },
-  experimental: {
-    serverActions: true,
-  },
+  // experimental: {
+  //   serverActions: true,
+  // },
 });
 
 export default config;

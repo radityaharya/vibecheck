@@ -33,6 +33,7 @@ export function NowPlaying(data: NowPlayingProps) {
     state: "paused",
   });
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const prevProgressRef = useRef<number>(0);
 
   useEffect(() => {
     setCurrentData(data);
@@ -67,14 +68,17 @@ export function NowPlaying(data: NowPlayingProps) {
   useEffect(() => {
     const diff =
       currentData.progress - progressPercent * (currentData.duration / 1000);
-    if (diff >= 1000) {
+    if (diff >= 5000 || diff <= -5000) {
       setProgressTimeFormat(formatTime(currentData.progress));
+      prevProgressRef.current = currentData.progress;
+    } else {
+      setProgressTimeFormat(formatTime(prevProgressRef.current));
     }
   }, [currentData.progress, currentData.duration, progressPercent]);
 
   return (
     <>
-      <div className="now-playing flex w-full flex-col content-between items-start gap-5 md:pr-20">
+      <div className="now-playing flex w-full flex-col content-between items-start gap-5 md:pr-10">
         <div className="now-playing-title flex flex-row items-center">
           <span className="text-lg font-bold text-white">Now Playing</span>
         </div>
@@ -86,7 +90,11 @@ export function NowPlaying(data: NowPlayingProps) {
             }`}
             height={80}
             width={80}
-            className="h-[80px] w-[80px] rounded-lg object-cover"
+            // className="h-[80px] w-[80px] rounded-lg object-cover ${}"
+            // grey when paused
+            className={`h-[80px] w-[80px] rounded-lg object-cover ${
+              currentData.state === "paused" ? "grayscale filter" : ""
+            }`}
           />
           <div className="track-info flex h-full w-full flex-col content-end items-start gap-1">
             <div className="track-title font-inter flex flex-col items-start gap-1 font-semibold text-white">

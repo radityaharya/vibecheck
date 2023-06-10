@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import type { NowPlayingProps } from "~/components/Room/NowPlaying";
 import type { NowPlayingResponse } from "~/types/spotify/now-playing";
 import type { DataProps } from "~/components/Room/QueueTable";
-import Div100vh from "react-div-100vh";
 
 const getQueue = async (roomId: string): Promise<DataProps[]> => {
   const response = await fetch(`/api/room/${roomId}/queue/mock`);
@@ -71,7 +70,7 @@ export default function Room({ params }: { params: { slug: string } }) {
 
   return (
     <Page>
-      <Div100vh className="flex h-full max-h-screen flex-col items-start gap-5 overflow-hidden bg-[#09080f]/80 pt-20 md:gap-10 md:pt-[110px]">
+      <div className="flex h-screen flex-col items-start gap-5 overflow-hidden bg-[#09080f]/80 pt-20 md:gap-10 md:pt-[110px]">
         <div className="flex h-full w-full flex-col md:flex-row">
           <div className="left-col flex max-h-[40%] w-full flex-col items-start gap-5 p-5 md:h-full md:max-h-full md:w-[40%] md:max-w-[450px] md:p-0 md:pl-20">
             <NowPlaying
@@ -90,7 +89,7 @@ export default function Room({ params }: { params: { slug: string } }) {
             <QueueTable data={data} />
           </div>
         </div>
-      </Div100vh>
+      </div>
     </Page>
   );
 }

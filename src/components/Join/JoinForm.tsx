@@ -14,7 +14,7 @@ const codeValidation = (e: React.FormEvent<HTMLInputElement>) => {
 
 const JoinForm = () => {
   return (
-    <div className="relative flex max-w-[400px] flex-col items-center justify-center gap-5">
+    <div className="relative flex h-screen max-w-[400px] flex-col items-center justify-center gap-5">
       <span className="text-[#f0f0f0]">
         <span>enter a room code</span>
         <br></br>

@@ -4,6 +4,8 @@ export const revalidate = 60;
 export const fetchCache = "auto";
 export const runtime = "nodejs";
 export const preferredRegion = "all";
+import { Toaster } from "src/components/ui/toaster";
+
 import { Inter } from "next/font/google";
 
 // If loading a variable font, you don't need to specify the font weight
@@ -26,8 +28,9 @@ export interface Props {
 export default function RootLayout({ children, showGradient = true }: Props) {
   return (
     <html lang="en" className={inter.className}>
-      <body>
+      <body className="dark">
         {children}
+        <Toaster />
         <GradientBackground showGradient={showGradient} />
       </body>
     </html>

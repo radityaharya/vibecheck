@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "~/lib/prisma/client";
 import getAccessToken from "~/lib/supabase/getAccessToken";
 import { log } from "next-axiom";
 import { NextResponse } from "next/server";
@@ -7,7 +7,6 @@ import { createClient } from "redis";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { NowPlayingResponse } from "~/types/spotify/now-playing";
-const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
@@ -23,7 +22,6 @@ export async function GET(
     data: { user },
   } = await supabase.auth.getUser();
 
-  // log.info(JSON.stringify(user));
   const userId = user?.id as string;
 
   if (!userId) {
@@ -70,7 +68,6 @@ export async function GET(
 
     if (cachedData) {
       log.info("Returning cached data");
-      // log.info("cached data", cachedData);
       return NextResponse.json(cachedData);
     }
 
@@ -82,7 +79,6 @@ export async function GET(
         EX: 5,
       });
       log.info("Returning fresh data");
-      // log.info("fresh data", currentlyPlaying);
       return NextResponse.json(currentlyPlaying);
     } else {
       return NextResponse.json(

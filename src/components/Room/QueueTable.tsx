@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { useToast } from "src/components/ui/use-toast";
 
 import { TrackItemCol } from "./TrackItemCol";
 import { VotedBy } from "./VotedBy";
@@ -38,6 +39,7 @@ export interface QueueTableProps {
 }
 
 function VoteActions(props: { item: DataProps }) {
+  const { toast } = useToast();
   // eslint-disable-next-line @typescript-eslint/require-await
   async function vote(type: "up" | "down") {
     // TODO: implement vote
@@ -48,6 +50,10 @@ function VoteActions(props: { item: DataProps }) {
     //   },
     //   body: JSON.stringify({ queueId: props.item.queueId, vote: type }),
     // }).catch((err) => console.error(err));
+    toast({
+      title: "Vote",
+      description: `You voted ${type} for ${props.item.trackTitle}`,
+    });
     console.log("vote", type);
   }
 

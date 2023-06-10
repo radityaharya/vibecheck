@@ -3,15 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
-import { getUser } from "~/components/getUser";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+async function getUser() {
+  const supabase = createClientComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return { user };
+}
 
 function Page() {
   const { data } = useSWR("user", getUser);
-  const { user } = data || {}; // add type guard to check if data is defined
+  const { user } = data || {};
 
   let userName = "Guest";
   if (user) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     userName = user?.user_metadata.full_name || user?.email?.split("@")[0];
   }
 
