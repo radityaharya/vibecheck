@@ -14,7 +14,7 @@ export default function Login() {
 
   const handleSignUp = async () => {
     const baseUrl =
-      process.env.NEXT_PUBLIC_VERCEL_URL || (process.env.DEV_URL as string);
+      process.env.NEXT_PUBLIC_VERCEL_URL || (process.env.NEXT_PUBLIC_DEV_URL as string);
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "spotify",
@@ -24,8 +24,6 @@ export default function Login() {
         redirectTo: `${baseUrl}/auth/callback`,
       },
     });
-    // const oAuthToken = data.session.provider_token // use to access provider API
-    router.refresh();
   };
 
   return (

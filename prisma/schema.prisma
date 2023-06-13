@@ -52,14 +52,16 @@ model Room {
   slug           String   @unique
   participants   User[]   @relation("RoomParticipants")
   queue          Queue?
+  updatedAt      DateTime @updatedAt
 }
 
 model Queue {
-  id        String         @id @default(uuid())
+  id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
   room      Room        @relation(fields: [roomId], references: [id])
   roomId    String      @unique
   queueItem QueueItem[]
+  updatedAt DateTime    @updatedAt
 }
 
 model Upvote {
@@ -82,18 +84,21 @@ model Downvote {
 
 model QueueItem {
   id        String     @id @default(uuid())
-  index     Int        
+  index     Int
   createdAt DateTime   @default(now())
   queue     Queue      @relation(fields: [queueId], references: [id])
   queueId   String
   trackId   String
   trackName String
-  // albumId   String
-  // albumName String
   addedBy   User       @relation(fields: [addedById], references: [id])
-  addedById String 
+  addedById String
   played    Boolean    @default(false)
   upvotes   Upvote[]
   downvotes Downvote[]
+  album     String
+  artist    String
+  duration  Int
+  image     String
+
   @@unique([queueId, index])
 }

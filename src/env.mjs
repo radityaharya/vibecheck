@@ -28,6 +28,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+    NEXT_PUBLIC_DEV_URL: z.string().min(1),
   },
 
   /**
@@ -47,5 +48,6 @@ export const env = createEnv({
     AXIOM_TOKEN: process.env.AXIOM_TOKEN,
     AXIOM_DATASET: process.env.AXIOM_DATASET,
     REDIS_URL: process.env.REDIS_URL,
+    NEXT_PUBLIC_DEV_URL: process.env.NEXT_PUBLIC_DEV_URL,
   },
 });

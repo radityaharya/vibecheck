@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo --show-all",
     "lint": "next lint",
     "start": "next start",
     "format": "prettier --write .",
