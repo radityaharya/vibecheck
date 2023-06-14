@@ -1,3 +1,5 @@
+"use client";
+
 import { Progress } from "src/components/ui/progress";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";

@@ -17,7 +17,11 @@ export interface VotedByProps {
 }
 
 export const VotedBy = ({ users }: VotedByProps) => {
-  // max 2 users to show
+  if (!users) {
+    return (
+      <div className="min-w-10 flex h-5 w-10 items-center justify-center"></div>
+    );
+  }
   const usersToShow = users.slice(0, 2);
 
   return (

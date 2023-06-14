@@ -26,13 +26,15 @@ export async function GET(
   }
   const roomId = slug;
 
-  const participants = await prisma.room.findFirstOrThrow({
-    where: {
-      slug: roomId,
-    },
-  }).participants()
-  
+  const participants = await prisma.room
+    .findFirstOrThrow({
+      where: {
+        slug: roomId,
+      },
+    })
+    .participants();
+
   return NextResponse.json({
-    participants
-  })
+    participants,
+  });
 }

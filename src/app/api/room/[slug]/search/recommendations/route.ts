@@ -96,8 +96,6 @@ export async function GET(
 
     const recommendationsResponse = recommendations.body;
 
-    // map over the recommendations and return the track id, image, track title and artist
-
     const userRecommendations = recommendationsResponse.tracks.map(
       (track): UserRecomendation => {
         return {
@@ -111,7 +109,7 @@ export async function GET(
 
     await redis.set(cacheKey, JSON.stringify(userRecommendations), {
       NX: true,
-      EX: 10 * 60,
+      EX: 10 * 60, // 10 minutes
     });
 
     return NextResponse.json(userRecommendations);

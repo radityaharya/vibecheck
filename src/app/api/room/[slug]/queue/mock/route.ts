@@ -19,12 +19,10 @@ async function randomData(): Promise<DataProps[]> {
     {
       queueId: faker.string.uuid(),
       image: faker.image.urlLoremFlickr(),
-      trackTitle: faker.lorem.words(),
+      trackName: faker.lorem.words(),
       artist: faker.person.firstName(),
       album: faker.lorem.words(),
-      duration: `${Math.floor(Math.random() * 10)}:${Math.floor(
-        Math.random() * 60
-      )}`,
+      duration: Math.floor(Math.random() * 1000),
       votedBy: await randomVoters(),
     },
   ];

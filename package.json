@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbo --show-all",
+    "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
     "format": "prettier --write .",
@@ -38,6 +38,7 @@
     "next-swagger-doc": "^0.3.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-loader-spinner": "^5.3.4",
     "redis": "^4.6.6",
     "sharp": "^0.32.1",
     "spotify-web-api-node": "^5.0.2",

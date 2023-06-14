@@ -10,7 +10,8 @@ export default function Login() {
 
   const handleSignUp = async () => {
     const baseUrl =
-      process.env.NEXT_PUBLIC_VERCEL_URL || (process.env.NEXT_PUBLIC_DEV_URL as string);
+      process.env.NEXT_PUBLIC_VERCEL_URL ||
+      (process.env.NEXT_PUBLIC_DEV_URL as string);
 
     await supabase.auth.signInWithOAuth({
       provider: "spotify",

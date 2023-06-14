@@ -20,10 +20,10 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 export interface DataProps {
   queueId: string;
   image: string;
-  trackTitle: string;
+  trackName: string;
   artist: string;
   album: string;
-  duration: string;
+  duration: number;
   votedBy: VotedByProps["users"];
 }
 
@@ -52,7 +52,7 @@ function VoteActions(props: { item: DataProps }) {
     // }).catch((err) => console.error(err));
     toast({
       title: "Vote",
-      description: `You voted ${type} for ${props.item.trackTitle}`,
+      description: `You voted ${type} for ${props.item.trackName}`,
     });
     console.log("vote", type);
   }
@@ -173,7 +173,7 @@ export const QueueTable = ({ data }: QueueTableProps) => {
               className="sticky top-0 z-10 pb-5 pt-2 text-left "
               key="duration"
             >
-              <Clock size={16} />
+              <Clock size={16} aria-label="duration" />
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -189,7 +189,7 @@ export const QueueTable = ({ data }: QueueTableProps) => {
                 <TableCell className="min-w-[50px]">
                   <TrackItemCol
                     image={item.image}
-                    trackTitle={item.trackTitle}
+                    trackTitle={item.trackName}
                     artist={item.artist}
                   />
                 </TableCell>
@@ -203,7 +203,7 @@ export const QueueTable = ({ data }: QueueTableProps) => {
                   <VoteActions item={item} />
                 </TableCell>
                 <TableCell className="hidden min-w-[50px] md:table-cell">
-                  {item.duration}
+                  {new Date(item.duration).toISOString().slice(14, 19)}
                 </TableCell>
               </TableRow>
             ))}
