@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { useState } from "react";
 import { PlusCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useToast } from "src/components/ui/use-toast";
+import type { QueueTableProps } from "./QueueTable";
+import { mutate } from "swr";
 
 export interface SearchResultItemProps {
   image: string;
@@ -9,12 +13,33 @@ export interface SearchResultItemProps {
   trackId: string;
 }
 
+const addTrackToQueue = async (roomId: string, trackId: string) => {
+  const response = fetch(`/api/room/${roomId}/queue/tracks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ trackId }),
+  });
+  const res = await response;
+  const data = (await res.json()) as {
+    success: boolean;
+    queueItemList: QueueTableProps;
+  };
+  return data.success;
+};
+
 export const SearchResultItem = ({
   image,
   trackTitle,
   artist,
+  trackId,
 }: SearchResultItemProps) => {
   const [isHovering, setIsHovering] = useState(false);
+
+  const { toast } = useToast();
+
+  const roomSlug = usePathname().split("/")[2] as string;
 
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -22,6 +47,58 @@ export const SearchResultItem = ({
 
   const handleMouseLeave = () => {
     setIsHovering(false);
+  };
+
+  // const handleAddTrackToQueue = async () => {
+  //   try {
+  //     await addTrackToQueue(roomSlug, trackId);
+  //     mutate(`/api/room/${roomSlug}/queue/tracks`).catch((err) => {
+  //       console.error(err);
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast({
+  //       title: "Error",
+  //       description: `Failed to add track to queue: ${err as string}`,
+  //     });
+  //     return false;
+  //   } finally {
+  //     const message =
+  //     toast({
+  //       title: "Added to queue",
+  //       description: `${trackTitle} by ${artist}`,
+  //     });
+  //     return true;
+  //   }
+  // };
+
+  const handleAddTrackToQueue = async () => {
+    toast({
+      title: "Adding to queue",
+      description: `${trackTitle} by ${artist}`,
+    });
+    try {
+      const data = await addTrackToQueue(roomSlug, trackId);
+      if (data) {
+        mutate(`/api/room/${roomSlug}/queue/tracks`).catch((err) => {
+          console.error(err);
+          toast({
+            title: "Error",
+            description: `Failed to add track to queue: ${err as string}`,
+          });
+        });
+        toast({
+          title: "Added to queue",
+          description: `${trackTitle} by ${artist}`,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: `Failed to add track to queue: ${err as string}`,
+      });
+    }
   };
 
   return (
@@ -42,6 +119,15 @@ export const SearchResultItem = ({
           className={`absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 transition-opacity duration-100 ${
             isHovering ? "opacity-100" : "opacity-0"
           }`}
+          onClick={() => {
+            toast({
+              title: "Adding to queue",
+              description: `${trackTitle} by ${artist}`,
+            });
+            handleAddTrackToQueue().catch((err) => {
+              console.error(err);
+            });
+          }}
         >
           <PlusCircle className="text-white/50" />
         </div>

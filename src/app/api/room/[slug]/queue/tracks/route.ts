@@ -61,6 +61,9 @@ export async function GET(
           },
         },
       },
+      orderBy: {
+        index: "asc",
+      },
     });
 
     if (queue) {
