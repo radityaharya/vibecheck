@@ -4,7 +4,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import getAccessToken from "~/lib/supabase/getAccessToken";
 import { log } from "next-axiom";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 type Room = {
   name: string;

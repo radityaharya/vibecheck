@@ -2,21 +2,17 @@
 "use client";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Page from "src/layouts/Page";
-import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 export default function Login() {
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
   const handleSignUp = async () => {
     const baseUrl =
       process.env.NEXT_PUBLIC_VERCEL_URL || (process.env.NEXT_PUBLIC_DEV_URL as string);
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "spotify",
       options: {
         scopes:
