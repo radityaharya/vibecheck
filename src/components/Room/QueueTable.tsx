@@ -17,14 +17,17 @@ import { VotedBy } from "./VotedBy";
 import type { VotedByProps } from "./VotedBy";
 import { Clock } from "lucide-react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { usePathname } from "next/navigation";
+
 export interface DataProps {
+  id: string;
   queueId: string;
   image: string;
   trackName: string;
   artist: string;
   album: string;
   duration: number;
-  votedBy: VotedByProps["users"];
+  upvotes: VotedByProps["users"];
 }
 
 export interface ColumnDef {
@@ -40,20 +43,35 @@ export interface QueueTableProps {
 
 function VoteActions(props: { item: DataProps }) {
   const { toast } = useToast();
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async function vote(type: "up" | "down") {
-    // TODO: implement vote
-    // const res = await fetch("/api/queue/vote", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ queueId: props.item.queueId, vote: type }),
-    // }).catch((err) => console.error(err));
+  const slug = usePathname().split("/")[2] as string;
+  async function vote(type: "upvote" | "downvote") {
     toast({
       title: "Vote",
-      description: `You voted ${type} for ${props.item.trackName}`,
+      description: `${type === "upvote" ? "Upvoting" : "Downvoting"} ${
+        props.item.trackName
+      }`,
     });
+    const res = await fetch(`/api/room/${slug}/queue/vote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ queueItemId: props.item.id, voteType: type }),
+    });
+    if (!res.ok) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description:
+          type === "upvote"
+            ? `Upvoted ${props.item.trackName}`
+            : `Downvoted ${props.item.trackName}`,
+      });
+    }
     console.log("vote", type);
   }
 
@@ -62,16 +80,16 @@ function VoteActions(props: { item: DataProps }) {
       <div className="flex cursor-pointer flex-col items-center justify-center rounded-full border-2 border-white bg-white">
         <ChevronUp
           size={18}
-          data-qid={props.item.queueId}
-          onClick={() => vote("up")}
+          data-qid={props.item.id}
+          onClick={() => vote("upvote")}
           color="#0a0a0a"
         />
       </div>
       <div className="flex cursor-pointer flex-col items-center justify-center rounded-full border-2 border-white">
         <ChevronDown
           size={18}
-          data-qid={props.item.queueId}
-          onClick={() => vote("down")}
+          data-qid={props.item.id}
+          onClick={() => vote("downvote")}
         />
       </div>
     </div>
@@ -197,7 +215,7 @@ export const QueueTable = ({ data }: QueueTableProps) => {
                   {item.album}
                 </TableCell>
                 <TableCell className="hidden min-w-[50px] md:table-cell">
-                  <VotedBy users={item.votedBy} />
+                  <VotedBy users={item.upvotes} />
                 </TableCell>
                 <TableCell className="min-w-[50px] max-w-[50px]">
                   <VoteActions item={item} />

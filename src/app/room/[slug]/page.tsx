@@ -9,7 +9,7 @@ import { QueueTable } from "~/components/Room/QueueTable";
 
 import type { NowPlayingProps } from "~/components/Room/NowPlaying";
 import type { DataProps } from "~/components/Room/QueueTable";
-import useSWR, { preload }from "swr";
+import useSWR from "swr";
 import { Bars } from "react-loader-spinner";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
@@ -33,18 +33,12 @@ async function getNowPlaying(url: string) {
 
 export default function Room({ params }: { params: { slug: string } }) {
   const roomId = params.slug;
-  preload(`/api/room/${roomId}/currentlyPlaying`, getNowPlaying).catch((e) =>
-    console.error(e)
-  );
-  preload(`/api/room/${roomId}/queue/tracks` , fetcher).catch((e) =>
-    console.error(e)
-  );
 
   const { data: queueData } = useSWR<DataProps[]>(
     `/api/room/${roomId}/queue/tracks`,
     fetcher,
     {
-      refreshInterval: 1000,
+      refreshInterval: 2000,
     }
   );
 
@@ -52,7 +46,7 @@ export default function Room({ params }: { params: { slug: string } }) {
     `/api/room/${roomId}/currentlyPlaying`,
     getNowPlaying,
     {
-      refreshInterval: 1000,
+      refreshInterval: 2000,
     }
   );
 

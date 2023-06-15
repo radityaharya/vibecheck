@@ -52,7 +52,20 @@ export async function GET(
 
     const queue = await prisma.queueItem.findMany({
       include: {
-        upvotes: true,
+        upvotes: {
+          include: {
+            createdBy: {
+              include: {
+                SpotifyAccount: {
+                  select: {
+                    picture: true,
+                    displayName: true,
+                  }
+                }
+              }
+            }
+          }   
+        }
       },
       where: {
         queue: {
@@ -66,13 +79,35 @@ export async function GET(
       },
     });
 
-    if (queue) {
-      await redis.set(cacheKey, JSON.stringify(queue), {
+    // map upvotes to match
+  // const upvote = {
+  //   userid
+  //   displayName
+  //   picture
+  // }
+  
+    const mappedQueue = queue.map((queueItem) => {
+      const upvotes = queueItem.upvotes.map((upvote) => {
+        return {
+          id: upvote.createdById,
+          username: upvote.createdBy.SpotifyAccount?.displayName,
+          image: upvote.createdBy.SpotifyAccount?.picture,
+        }
+      })
+      return {
+        ...queueItem,
+        upvotes: upvotes,
+      }
+    })
+          
+
+    if (mappedQueue) {
+      await redis.set(cacheKey, JSON.stringify(mappedQueue), {
         NX: true,
         EX: 5,
       });
       log.info("Returning fresh data");
-      return NextResponse.json(queue);
+      return NextResponse.json(mappedQueue);
     } else {
       return NextResponse.json(
         { error: "Failed fetching queue" },
