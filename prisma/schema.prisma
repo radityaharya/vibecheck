@@ -71,6 +71,8 @@ model Upvote {
   createdById String
   queueItem   QueueItem? @relation(fields: [queueItemId], references: [id])
   queueItemId String?
+
+  @@unique([createdById, queueItemId])
 }
 
 model Downvote {
