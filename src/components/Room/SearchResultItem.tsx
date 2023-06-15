@@ -25,8 +25,14 @@ const addTrackToQueue = async (roomId: string, trackId: string) => {
   const data = (await res.json()) as {
     success: boolean;
     queueItemList: QueueTableProps;
+    error?: string;
   };
-  return data.success;
+  return {
+    success: data.success,
+    queueItemList: data.queueItemList,
+    error: data.error,
+    status: res.status,
+  };
 };
 
 export const SearchResultItem = ({
@@ -49,54 +55,32 @@ export const SearchResultItem = ({
     setIsHovering(false);
   };
 
-  // const handleAddTrackToQueue = async () => {
-  //   try {
-  //     await addTrackToQueue(roomSlug, trackId);
-  //     mutate(`/api/room/${roomSlug}/queue/tracks`).catch((err) => {
-  //       console.error(err);
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast({
-  //       title: "Error",
-  //       description: `Failed to add track to queue: ${err as string}`,
-  //     });
-  //     return false;
-  //   } finally {
-  //     const message =
-  //     toast({
-  //       title: "Added to queue",
-  //       description: `${trackTitle} by ${artist}`,
-  //     });
-  //     return true;
-  //   }
-  // };
-
   const handleAddTrackToQueue = async () => {
     toast({
       title: "Adding to queue",
-      description: `${trackTitle} by ${artist}`,
+      description: `${trackTitle} -  ${artist}`,
     });
-    try {
-      const data = await addTrackToQueue(roomSlug, trackId);
-      if (data) {
-        mutate(`/api/room/${roomSlug}/queue/tracks`).catch((err) => {
+    const add = await addTrackToQueue(roomSlug, trackId);
+    if (add.status === 200) {
+      mutate(`/api/room/${roomSlug}/queue/tracks`, add.queueItemList).catch(
+        (err) => {
           console.error(err);
           toast({
             title: "Error",
             description: `Failed to add track to queue: ${err as string}`,
           });
-        });
-        toast({
-          title: "Added to queue",
-          description: `${trackTitle} by ${artist}`,
-        });
-      }
-    } catch (err) {
-      console.error(err);
+        }
+      );
+      toast({
+        title: "Added to queue",
+        description: `${trackTitle} -  ${artist}`,
+      });
+    } else {
       toast({
         title: "Error",
-        description: `Failed to add track to queue: ${err as string}`,
+        description: `Failed to add track to queue: ${
+          (add as { error: string }).error
+        }`,
       });
     }
   };
@@ -120,10 +104,6 @@ export const SearchResultItem = ({
             isHovering ? "opacity-100" : "opacity-0"
           }`}
           onClick={() => {
-            toast({
-              title: "Adding to queue",
-              description: `${trackTitle} by ${artist}`,
-            });
             handleAddTrackToQueue().catch((err) => {
               console.error(err);
             });

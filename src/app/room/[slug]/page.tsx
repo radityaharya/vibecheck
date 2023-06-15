@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
@@ -8,7 +9,7 @@ import { QueueTable } from "~/components/Room/QueueTable";
 
 import type { NowPlayingProps } from "~/components/Room/NowPlaying";
 import type { DataProps } from "~/components/Room/QueueTable";
-import useSWR from "swr";
+import useSWR, { preload }from "swr";
 import { Bars } from "react-loader-spinner";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
@@ -17,7 +18,6 @@ async function getNowPlaying(url: string) {
   console.log(url);
   const res = await fetch(url).then((response) => response.json());
   const data = res.body;
-  console.log(data);
   const nowPlayingProps: NowPlayingProps = {
     image:
       data?.item?.album?.images[0]?.url ??
@@ -28,12 +28,17 @@ async function getNowPlaying(url: string) {
     duration: data?.item?.duration_ms ?? 0,
     state: data?.is_playing ? "playing" : "paused",
   };
-  console.log(nowPlayingProps);
   return nowPlayingProps;
 }
 
 export default function Room({ params }: { params: { slug: string } }) {
   const roomId = params.slug;
+  preload(`/api/room/${roomId}/currentlyPlaying`, getNowPlaying).catch((e) =>
+    console.error(e)
+  );
+  preload(`/api/room/${roomId}/queue/tracks` , fetcher).catch((e) =>
+    console.error(e)
+  );
 
   const { data: queueData } = useSWR<DataProps[]>(
     `/api/room/${roomId}/queue/tracks`,
