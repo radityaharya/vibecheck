@@ -1,7 +1,8 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { prisma } from "~/lib/prisma/client";
 import SpotifyWebApi from "spotify-web-api-node";
-import getAccessToken from "~/lib/supabase/getAccessToken";
+import getAccessToken from "~/utils/supabase/getAccessToken";
+import { getUserId } from "~/utils/supabase/getUserId";
 import { log } from "next-axiom";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
@@ -13,14 +14,10 @@ type Room = {
 
 export async function GET(req: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userId = user?.id as string;
+  const userId = await getUserId(supabase);
 
   if (!userId) {
-    return NextResponse.json({ error: "no user" }, { status: 400 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // TODO: change to req.body
@@ -110,6 +107,10 @@ export async function GET(req: NextRequest) {
     });
   } else {
     log.info(`Temp playlist already exists for ${newRoom?.name}`);
+    // return NextResponse.json(
+    //   { error: "Temp playlist already exists" },
+    //   { status: 400 }
+    // );
   }
 
   await prisma.queue

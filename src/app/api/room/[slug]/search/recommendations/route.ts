@@ -2,7 +2,8 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { prisma } from "~/lib/prisma/client";
-import getAccessToken from "~/lib/supabase/getAccessToken";
+import getAccessToken from "~/utils/supabase/getAccessToken";
+import { getUserId } from "~/utils/supabase/getUserId";
 import SpotifyWebApi from "spotify-web-api-node";
 import { createClient } from "redis";
 import { log } from "next-axiom";
@@ -28,22 +29,15 @@ export async function GET(
 ) {
   const supabase = createRouteHandlerClient({ cookies });
   const slug = params.slug;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userId = user?.id as string;
+  const userId = await getUserId(supabase);
 
   if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const roomId = slug;
 
   const room = await prisma.room.findUnique({
     where: {
-      slug: roomId,
+      slug: slug,
     },
   });
 
@@ -59,7 +53,7 @@ export async function GET(
 
   await redis.connect();
 
-  const cacheKey = `room:${roomId}:user:${userId}:search:recommendations`;
+  const cacheKey = `room:${slug}:user:${userId}:search:recommendations`;
 
   try {
     const cachedData = (await JSON.parse(
@@ -72,9 +66,7 @@ export async function GET(
     }
 
     if (!spotifyToken) {
-      return new Response("No spotify token", {
-        status: 500,
-      });
+      return NextResponse.json({ error: "No spotify token" }, { status: 500 });
     }
 
     const spt = new SpotifyWebApi({
@@ -114,9 +106,10 @@ export async function GET(
 
     return NextResponse.json(userRecommendations);
   } catch (error) {
-    return new Response(error as string, {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : error },
+      { status: 500 }
+    );
   } finally {
     await redis.disconnect();
   }

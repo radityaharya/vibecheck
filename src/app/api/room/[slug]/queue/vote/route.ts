@@ -3,6 +3,7 @@ import { prisma } from "~/lib/prisma/client";
 import { log } from "next-axiom";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getUserId } from "~/utils/supabase/getUserId";
 
 export async function POST(
   request: Request,
@@ -13,18 +14,14 @@ export async function POST(
   }
 ) {
   const supabase = createRouteHandlerClient({ cookies });
-  const slug = params.slug;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  const userId = user?.id as string;
-
+  const userId = await getUserId(supabase);
+  
   if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const slug = params.slug;
 
   const room = await prisma.room.findUnique({
     where: {
@@ -61,7 +58,7 @@ export async function POST(
   } catch (e) {
     log.error("Failed registering vote", e as Error);
     return NextResponse.json(
-      { error: "Failed registering vote" },
+      { error: e instanceof Error ? e.message : "Unknown error" },
       { status: 500 }
     );
   }

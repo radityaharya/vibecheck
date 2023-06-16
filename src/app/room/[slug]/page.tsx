@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import { NowPlaying } from "~/components/Room/NowPlaying";
 import Page from "~/layouts/Page";
@@ -11,12 +8,15 @@ import type { NowPlayingProps } from "~/components/Room/NowPlaying";
 import type { DataProps } from "~/components/Room/QueueTable";
 import useSWR from "swr";
 import { Bars } from "react-loader-spinner";
+import type { NowPlayingResponse } from "src/types/spotify/now-playing";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 
 async function getNowPlaying(url: string) {
   console.log(url);
-  const res = await fetch(url).then((response) => response.json());
+  const res = (await fetch(url).then((response) =>
+    response.json()
+  )) as NowPlayingResponse;
   const data = res.body;
   const nowPlayingProps: NowPlayingProps = {
     image:

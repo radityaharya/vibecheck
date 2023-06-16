@@ -1,6 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import { prisma } from "~/lib/prisma/client";
-import getAccessToken from "~/lib/supabase/getAccessToken";
+import getAccessToken from "~/utils/supabase/getAccessToken";
+import { getUserId } from "~/utils/supabase/getUserId";
 import { log } from "next-axiom";
 import { NextResponse } from "next/server";
 import { createClient } from "redis";
@@ -18,22 +19,15 @@ export async function GET(
 ) {
   const supabase = createRouteHandlerClient({ cookies });
   const slug = params.slug;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userId = user?.id as string;
-
+  const userId = await getUserId(supabase);
+  
   if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const roomId = slug;
 
   const room = await prisma.room.findUnique({
     where: {
-      slug: roomId,
+      slug: slug,
     },
   });
 
@@ -59,7 +53,7 @@ export async function GET(
 
   await redis.connect();
 
-  const cacheKey = `currentlyPlaying-${roomId}`;
+  const cacheKey = `currentlyPlaying-${slug}`;
 
   try {
     const cachedData = (await JSON.parse(

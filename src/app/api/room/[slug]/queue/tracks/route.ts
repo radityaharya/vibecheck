@@ -1,12 +1,13 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import { prisma } from "~/lib/prisma/client";
-import getAccessToken from "~/lib/supabase/getAccessToken";
+import getAccessToken from "~/utils/supabase/getAccessToken";
+import { getUserId } from "~/utils/supabase/getUserId";
 import { log } from "next-axiom";
 import { NextResponse } from "next/server";
 import { createClient } from "redis";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import syncQueueToPlaylist from "~/lib/spotify/syncQueueToPlaylist";
+import syncQueueToPlaylist from "~/utils/spotify/syncQueueToPlaylist";
 
 export async function GET(
   request: Request,
@@ -17,17 +18,11 @@ export async function GET(
   }
 ) {
   const supabase = createRouteHandlerClient({ cookies });
+  const userId = await getUserId(supabase);
   const slug = params.slug;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userId = user?.id as string;
 
   if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const redis = createClient({
@@ -60,12 +55,12 @@ export async function GET(
                   select: {
                     picture: true,
                     displayName: true,
-                  }
-                }
-              }
-            }
-          }   
-        }
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       where: {
         queue: {
@@ -79,27 +74,19 @@ export async function GET(
       },
     });
 
-    // map upvotes to match
-  // const upvote = {
-  //   userid
-  //   displayName
-  //   picture
-  // }
-  
     const mappedQueue = queue.map((queueItem) => {
       const upvotes = queueItem.upvotes.map((upvote) => {
         return {
           id: upvote.createdById,
           username: upvote.createdBy.SpotifyAccount?.displayName,
           image: upvote.createdBy.SpotifyAccount?.picture,
-        }
-      })
+        };
+      });
       return {
         ...queueItem,
         upvotes: upvotes,
-      }
-    })
-          
+      };
+    });
 
     if (mappedQueue) {
       await redis.set(cacheKey, JSON.stringify(mappedQueue), {

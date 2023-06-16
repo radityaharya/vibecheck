@@ -1,8 +1,10 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { prisma } from "~/lib/prisma/client";
-import getAccessToken from "~/lib/supabase/getAccessToken";
+import getAccessToken from "~/utils/supabase/getAccessToken";
+import { getUserId } from "~/utils/supabase/getUserId";
 import SpotifyWebApi from "spotify-web-api-node";
+import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
@@ -14,22 +16,15 @@ export async function GET(
 ) {
   const supabase = createRouteHandlerClient({ cookies });
   const slug = params.slug;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userId = user?.id as string;
+  const userId = await getUserId(supabase);
 
   if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const roomId = slug;
 
   const room = await prisma.room.findUnique({
     where: {
-      slug: roomId,
+      slug: slug,
     },
   });
 
@@ -50,9 +45,7 @@ export async function GET(
   const searchQuery = request.url.split("?q=")[1];
 
   if (!searchQuery) {
-    return new Response("No search query", {
-      status: 400,
-    });
+    return NextResponse.json({ error: "No search query" }, { status: 400 });
   }
 
   const searchResults = await spt.searchTracks(searchQuery, {
@@ -68,9 +61,5 @@ export async function GET(
     };
   });
 
-  return new Response(JSON.stringify(tracks), {
-    headers: {
-      "content-type": "application/json; charset=UTF-8",
-    },
-  });
+  return NextResponse.json(tracks);
 }
