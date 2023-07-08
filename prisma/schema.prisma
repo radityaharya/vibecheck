@@ -29,7 +29,7 @@ model User {
 
 model SpotifyAccount {
   id           String  @id @unique
-  user         User    @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String  @unique
   isPremium    Boolean @default(false)
   country      String
@@ -45,7 +45,7 @@ model SpotifyAccount {
 model Room {
   id             String   @id @default(uuid())
   createdAt      DateTime @default(now())
-  roomMaster     User     @relation("RoomMaster", fields: [roomMasterId], references: [id])
+  roomMaster     User     @relation("RoomMaster", fields: [roomMasterId], references: [id], onDelete: Cascade)
   tempPlaylistId String?
   roomMasterId   String
   name           String
@@ -58,7 +58,7 @@ model Room {
 model Queue {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
-  room      Room        @relation(fields: [roomId], references: [id])
+  room      Room        @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId    String      @unique
   queueItem QueueItem[]
   updatedAt DateTime    @updatedAt
@@ -67,7 +67,7 @@ model Queue {
 model Upvote {
   id          Int        @id @default(autoincrement())
   createdAt   DateTime   @default(now())
-  createdBy   User       @relation(fields: [createdById], references: [id])
+  createdBy   User       @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
   queueItem   QueueItem? @relation(fields: [queueItemId], references: [id])
   queueItemId String?
@@ -78,7 +78,7 @@ model Upvote {
 model Downvote {
   id          Int        @id @default(autoincrement())
   createdAt   DateTime   @default(now())
-  createdBy   User       @relation(fields: [createdById], references: [id])
+  createdBy   User       @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
   queueItem   QueueItem? @relation(fields: [queueItemId], references: [id])
   queueItemId String?
@@ -88,11 +88,11 @@ model QueueItem {
   id        String     @id @default(uuid())
   index     Int
   createdAt DateTime   @default(now())
-  queue     Queue      @relation(fields: [queueId], references: [id])
+  queue     Queue      @relation(fields: [queueId], references: [id], onDelete: Cascade)
   queueId   String
   trackId   String
   trackName String
-  addedBy   User       @relation(fields: [addedById], references: [id])
+  addedBy   User       @relation(fields: [addedById], references: [id], onDelete: Cascade)
   addedById String
   played    Boolean    @default(false)
   upvotes   Upvote[]

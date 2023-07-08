@@ -35,11 +35,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "no data" }, { status: 400 });
   }
 
-  const room = await prisma.room.findUnique({
-    where: {
-      slug: data.slug,
-    },
-  });
+  let room;
+
+  try {
+    room = await prisma.room.findUnique({
+      where: {
+        slug: data.slug,
+      },
+    });
+  } catch (err) {
+    log.error(`Failed registering room: ${err as string}`);
+  }
 
   if (room) {
     log.error("Failed registering room: slug already exists");

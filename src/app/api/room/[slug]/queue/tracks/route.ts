@@ -41,7 +41,7 @@ export async function GET(
     )) as unknown;
 
     if (cachedData) {
-      log.info("Returning cached data");
+      // log.info("Returning cached data");
       return NextResponse.json(cachedData);
     }
 
@@ -93,7 +93,7 @@ export async function GET(
         NX: true,
         EX: 5,
       });
-      log.info("Returning fresh data");
+      // log.info("Returning fresh data");
       return NextResponse.json(mappedQueue);
     } else {
       return NextResponse.json(

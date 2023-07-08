@@ -20,7 +20,7 @@ export async function GET(
   const supabase = createRouteHandlerClient({ cookies });
   const slug = params.slug;
   const userId = await getUserId(supabase);
-  
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -61,7 +61,7 @@ export async function GET(
     )) as NowPlayingResponse;
 
     if (cachedData) {
-      log.info("Returning cached data");
+      // log.info("Returning cached data");
       return NextResponse.json(cachedData);
     }
 
@@ -72,7 +72,7 @@ export async function GET(
         NX: true,
         EX: 5,
       });
-      log.info("Returning fresh data");
+      // log.info("Returning fresh data");
       return NextResponse.json(currentlyPlaying);
     } else {
       return NextResponse.json(
