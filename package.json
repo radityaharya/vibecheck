@@ -41,7 +41,7 @@
     "react-loader-spinner": "^5.3.4",
     "react-spotify-web-playback-sdk": "^3.0.2",
     "redis": "^4.6.6",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.6",
     "spotify-web-api-node": "^5.0.2",
     "swr": "^2.1.5",
     "tailwind-merge": "^1.12.0",
